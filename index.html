@@ -7,31 +7,84 @@
         <title>SoftCloud OÜ proovileht</title>
         <link href="index.css" rel="stylesheet">
         <script type="text/javascript">
-            let users = []
 
-            function createTableRow(uName, fName, sName) {
+            function createTableColumnInto(rowElement, value) {
+                let tableBody = document.getElementById("usersTableBody")
+                let col = document.createElement("td")
+                col.classList.add("table-element")
+                col.innerText = value
+
+                rowElement.appendChild(col)
+            }
+
+            function createTableRowFromUser(user) {
+                let tableBody = document.getElementById("usersTableBody")
+                let row = document.createElement("tr")
+                createTableColumnInto(row, user.username)
+                createTableColumnInto(row, user.firstname)
+                createTableColumnInto(row, user.surname)
+
+                tableBody.appendChild(row)
 
             }
 
-            function fetchUsers() {
-                fetch()
+            function fetchFakeUsers() {
+                return new Promise((resolve, reject) =>
+                    fetch('https://jsonplaceholder.typicode.com/users')
+                        .then((response) => response.json())
+                        .then((json) => {
+                            let results = []
+
+                            for (const index in json) {
+                                const user = json[index]
+                                const nameExpr = user.name.match(/\w+ ?[IVXLCDM]*$/)
+                                const surname = nameExpr[0].trim()
+                                const firstname = nameExpr.input.slice(0, nameExpr.index).trim()
+
+                                results.push({
+                                    username: user.username,
+                                    firstname:  firstname,
+                                    surname:  surname
+                                })
+                            }
+                            resolve(results)
+                        })
+                        .catch((err) => reject(err))
+                )
+            }
+
+            function loadUsers(users) {
+                for (const index in users) {
+                    createTableRowFromUser(users[index])
+                }
             }
 
             function searchUsers() {
 
             }
+
+            fetchFakeUsers().then((users) => loadUsers(users))
         </script>
     </head>
     <body>
-        <form class="inline-form" id="searchForm" action="return searchUsers()">
+        <h1>Proovitöö</h1>
+        <form class="inline-form" id="searchForm" action="javascript:searchUsers()">
             <input title="Kasutajanimi" type="text" name="username" value="" placeholder="Kasutajanimi">
             <input title="Eesnimi" type="text" name="firstname" value="" placeholder="Eesnimi">
             <input title="Perenimi" type="text" name="surname" value="" placeholder="Perenimi">
+            <input type="submit" title="Otsi" value="Otsi">
         </form>
-        <table>
+        <div class="spacing-3"></div>
+        <table id="usersTable">
             <thead>
+                <tr>
+                    <th class="table-element">Kasutajanimi</th>
+                    <th class="table-element">Eesnimi</th>
+                    <th class="table-element">Perenimi</th>
+                </tr>
             </thead>
-            <tbody id="resultsTableBody">
+            <tbody id="usersTableBody">
+
             </tbody>
         </table>
     </body>

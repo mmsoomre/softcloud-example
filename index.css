@@ -6,7 +6,49 @@ body {
 	max-width: 60rem;
 }
 
+.spacing-1, .spacing-2, .spacing-3, .spacing-4, .spacing-5 {
+    display: block;
+}
+.spacing-1 {
+    height: 1rem;
+}
+.spacing-2 {
+    height: 2rem;
+}
+.spacing-3 {
+    height: 3rem;
+}
+.spacing-4 {
+    height: 4rem;
+}
+.spacing-5 {
+    height: 5rem;
+}
+
+.inline-form {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center
+}
+
 .inline-form>input {
-    display: inline-block
+    flex: 1 1 auto;
+}
+.inline-form>input[type="submit"] {
+    flex-basis: 20%;
+}
+
+#usersTable, #usersTable>thead, #usersTable>thead>tr {
+    display: flex;
+    width: 100%;
+}
+#usersTable>thead {
+    background-color: lightgray;
+}
+
+.table-element {
+    border: solid 1px gray;
+    flex: auto;
 }
 
