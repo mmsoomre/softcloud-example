@@ -4,12 +4,35 @@
         <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="css/style.css" rel="stylesheet">
         <title>SoftCloud OÜ proovileht</title>
+        <link href="index.css" rel="stylesheet">
+        <script type="text/javascript">
+            let users = []
+
+            function createTableRow(uName, fName, sName) {
+
+            }
+
+            function fetchUsers() {
+                fetch()
+            }
+
+            function searchUsers() {
+
+            }
+        </script>
     </head>
     <body>
-
-
-
+        <form class="inline-form" id="searchForm" action="return searchUsers()">
+            <input title="Kasutajanimi" type="text" name="username" value="" placeholder="Kasutajanimi">
+            <input title="Eesnimi" type="text" name="firstname" value="" placeholder="Eesnimi">
+            <input title="Perenimi" type="text" name="surname" value="" placeholder="Perenimi">
+        </form>
+        <table>
+            <thead>
+            </thead>
+            <tbody id="resultsTableBody">
+            </tbody>
+        </table>
     </body>
 </html>

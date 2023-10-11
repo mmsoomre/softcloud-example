@@ -1,0 +1,12 @@
+body {
+	margin: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	width: calc(100% - 2rem);
+	max-width: 60rem;
+}
+
+.inline-form>input {
+    display: inline-block
+}
+
