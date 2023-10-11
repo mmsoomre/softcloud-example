@@ -10,10 +10,10 @@
     </head>
     <body>
         <h1>Proovitöö</h1>
-        <form class="inline-form" id="searchForm" action="javascript:searchUsers()">
-            <input title="Kasutajanimi" type="text" name="username" value="" placeholder="Kasutajanimi">
-            <input title="Eesnimi" type="text" name="firstname" value="" placeholder="Eesnimi">
-            <input title="Perenimi" type="text" name="surname" value="" placeholder="Perenimi">
+        <form class="inline-form" id="searchForm" action="javascript:searchUsersAction()">
+            <input id="usernameSearch" title="Kasutajanimi" type="text" name="username" value="" placeholder="Kasutajanimi">
+            <input id="firstnameSearch" title="Eesnimi" type="text" name="firstname" value="" placeholder="Eesnimi">
+            <input id="surnameSearch" title="Perenimi" type="text" name="surname" value="" placeholder="Perenimi">
             <input type="submit" title="Otsi" value="Otsi">
         </form>
         <div class="spacing-1"></div>
@@ -30,6 +30,6 @@
             <tbody id="usersTableBody">
             </tbody>
         </table>
-        <h2 id="noResults" hidden>Tulemusi ei leitud</h2>
+        <h2 id="noResultText" hidden>Tulemusi ei leitud</h2>
     </body>
 </html>
