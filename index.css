@@ -45,6 +45,7 @@ body {
 #usersTable {
     background-color: lightgray;
     border-spacing: 0px;
+    border: solid 1px gray;
 }
 
 #usersTable, #usersTable>thead, #usersTable>thead>tr {
@@ -53,7 +54,6 @@ body {
 
 #usersTable>thead>tr>th {
     background-color: lightblue;
-    border-bottom: solid 1px black;
 }
 
 #usersTableBody>tr:nth-child(odd) {
@@ -61,6 +61,10 @@ body {
 }
 .table-element {
     padding: 0.2rem;
+    text-align: center;
+}
+
+#noResults {
     text-align: center;
 }
 

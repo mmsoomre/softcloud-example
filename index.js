@@ -25,16 +25,19 @@ function fetchFakeUsers() {
             .then((json) => {
                 let results = []
 
+                // the JSON does not quite match what we'll be saving
+                // so, let's transform it a bit
                 for (const index in json) {
                     const user = json[index]
+                    // surnames can have roman numerals, and we're only given the full name
                     const nameExpr = user.name.match(/\w+ ?[IVXLCDM]*$/)
                     const surname = nameExpr[0].trim()
                     const firstname = nameExpr.input.slice(0, nameExpr.index).trim()
 
                     results.push({
                         username: user.username,
-                        firstname:  firstname,
-                        surname:  surname
+                        firstname: firstname,
+                        surname: surname
                     })
                 }
                 resolve(results)
