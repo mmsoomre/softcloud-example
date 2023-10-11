@@ -29,26 +29,38 @@ body {
     width: 100%;
     display: flex;
     flex-flow: row wrap;
-    align-items: center
+    align-items: space-between;
 }
 
 .inline-form>input {
-    flex: 1 1 auto;
+    min-width: 0px;
+    min-height: 2rem;
+    padding: 0.2rem;
+    flex: 1 1 0%;
 }
 .inline-form>input[type="submit"] {
-    flex-basis: 20%;
+    flex-basis: 100%;
+}
+
+#usersTable {
+    background-color: lightgray;
+    border-spacing: 0px;
 }
 
 #usersTable, #usersTable>thead, #usersTable>thead>tr {
-    display: flex;
     width: 100%;
 }
-#usersTable>thead {
-    background-color: lightgray;
+
+#usersTable>thead>tr>th {
+    background-color: lightblue;
+    border-bottom: solid 1px black;
 }
 
+#usersTableBody>tr:nth-child(odd) {
+    background-color: white;
+}
 .table-element {
-    border: solid 1px gray;
-    flex: auto;
+    padding: 0.2rem;
+    text-align: center;
 }
 
