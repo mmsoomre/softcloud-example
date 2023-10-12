@@ -1,3 +1,7 @@
+const STORAGE_ENTRY = "users"
+
+let knownUsers = JSON.parse(window.localStorage.getItem(STORAGE_ENTRY))
+
 function createTableColumnInto(rowElement, value) {
     const tableBody = document.getElementById("usersTableBody")
     const col = document.createElement("td")
@@ -15,7 +19,6 @@ function createTableRowFromUser(user) {
     createTableColumnInto(row, user.surname)
 
     tableBody.appendChild(row)
-
 }
 
 function fetchFakeUsers() {
@@ -54,16 +57,6 @@ function createEntries(users) {
         createTableRowFromUser(users[index])
 }
 
-let knownUsers
-fetchFakeUsers()
-    .then((users) => {
-        knownUsers = users
-        createEntries(users)
-    })
-    .catch((err) => {
-        document.getElementById("errorMessage").innerText = toString(err)
-    })
-
 function searchUsersAction() {
     const expectedUsername = document.getElementById("usernameSearch").value.toLowerCase()
     const expectedFirstName = document.getElementById("firstnameSearch").value.toLowerCase()
@@ -98,3 +91,22 @@ function searchUsersAction() {
 
     createEntries(results)
 }
+
+function saveUsers(users) {
+    window.localStorage.setItem(STORAGE_ENTRY, JSON.stringify(users))
+}
+
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    if (!knownUsers)
+        fetchFakeUsers()
+            .then((users) => {
+                knownUsers = users
+                saveUsers(users)
+            })
+            .catch((err) => {
+                document.getElementById("errorMessage").innerText = toString(err)
+            })
+
+    createEntries(knownUsers)
+})
