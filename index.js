@@ -1,6 +1,8 @@
 const STORAGE_ENTRY = "users"
+const PLACEHOLDER_TYPICODE_JSON_URL = "https://jsonplaceholder.typicode.com/users"
 
-let knownUsers = JSON.parse(window.localStorage.getItem(STORAGE_ENTRY))
+let knownUsers
+let searching = false
 
 function createTableColumnInto(rowElement, value) {
     const tableBody = document.getElementById("usersTableBody")
@@ -9,6 +11,8 @@ function createTableColumnInto(rowElement, value) {
     col.innerText = value
 
     rowElement.appendChild(col)
+
+    return col
 }
 
 function createTableRowFromUser(user) {
@@ -18,12 +22,27 @@ function createTableRowFromUser(user) {
     createTableColumnInto(row, user.firstname)
     createTableColumnInto(row, user.surname)
 
+    const modifyColumnContainer = createTableColumnInto(row, "")
+    const deleteButton = document.createElement("button")
+    deleteButton.innerText = "Kustuta"
+    deleteButton.type = "button"
+    deleteButton.title = "Eemalda kasutaja nimekirjast"
+    deleteButton.onclick = function() {
+        deleteUser(user)
+        refreshEntries()
+    }
+    modifyColumnContainer.appendChild(deleteButton)
+
+
+
     tableBody.appendChild(row)
+
+    return row
 }
 
 function fetchFakeUsers() {
     return new Promise((resolve, reject) =>
-        fetch('https://jsonplaceholder.typicode.com/users')
+        fetch(PLACEHOLDER_TYPICODE_JSON_URL)
             .then((response) => response.json())
             .then((json) => {
                 let results = []
@@ -55,7 +74,16 @@ function createEntries(users) {
 
     for (const index in users)
         createTableRowFromUser(users[index])
+
 }
+
+function refreshEntries() {
+    if (searching)
+        searchUsersAction()
+    else
+        createEntries(knownUsers)
+}
+
 
 function searchUsersAction() {
     const expectedUsername = document.getElementById("usernameSearch").value.toLowerCase()
@@ -67,6 +95,7 @@ function searchUsersAction() {
     const usersTable = document.getElementById("usersTable")
 
     let results = []
+    searching = false
 
     for (const user of knownUsers) {
         let matches = true
@@ -79,8 +108,10 @@ function searchUsersAction() {
         if (expectedSurname && expectedSurname.trim() !== "")
             if (!user.surname.toLowerCase().includes(expectedSurname))
                 matches = false
-        if (matches)
+        if (matches) {
             results.push(user)
+            searching = true
+        }
     }
 
     resultCount.innerText = results.length
@@ -96,17 +127,36 @@ function saveUsers(users) {
     window.localStorage.setItem(STORAGE_ENTRY, JSON.stringify(users))
 }
 
+function addUser(username, firstname, surname) {
+    knownUsers.add({username: username, firstname: firstname, surname: surname})
+    saveUsers(knownUsers)
+    refreshEntries()
+}
+
+function deleteUser(user) {
+    const index = knownUsers.indexOf(user)
+    knownUsers.splice(index, 1)
+    saveUsers(knownUsers)
+}
+
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    if (!knownUsers)
+
+    if (window.localStorage.getItem(STORAGE_ENTRY) == null)
         fetchFakeUsers()
             .then((users) => {
                 knownUsers = users
                 saveUsers(users)
+                refreshEntries()
             })
             .catch((err) => {
                 document.getElementById("errorMessage").innerText = toString(err)
             })
+    else {
+        knownUsers = JSON.parse(window.localStorage.getItem(STORAGE_ENTRY))
+        refreshEntries()
+    }
 
-    createEntries(knownUsers)
+
+
 })
