@@ -1,7 +1,7 @@
 const STORAGE_ENTRY = "users"
 const PLACEHOLDER_TYPICODE_JSON_URL = "https://jsonplaceholder.typicode.com/users"
 
-let knownUsers
+let knownUsers = []
 let searching = false
 
 function createTableColumnInto(rowElement, value) {
@@ -128,9 +128,19 @@ function saveUsers(users) {
 }
 
 function addUser(username, firstname, surname) {
-    knownUsers.add({username: username, firstname: firstname, surname: surname})
-    saveUsers(knownUsers)
-    refreshEntries()
+    let isUnique = true
+
+    for (const knownUser of knownUsers)
+        if (username == knownUser.username)
+            isUnique = false
+
+    if (isUnique) {
+        knownUsers.push({username: username, firstname: firstname, surname: surname})
+        saveUsers(knownUsers)
+        refreshEntries()
+    }
+
+    return isUnique
 }
 
 function deleteUser(user) {
@@ -139,24 +149,86 @@ function deleteUser(user) {
     saveUsers(knownUsers)
 }
 
+function importUsers(users) {
+    // could be done better if usernames must be unique with just a map, but i'm in this far now...
+    for (const user of users) {
+        let isUnique = true
+
+        for (const knownUser of knownUsers)
+            if (user.username == knownUser.username)
+                isUnique = false
+
+        if (isUnique)
+            knownUsers.push(user)
+    }
+}
+
+function importPlaceholderUsers() {
+    fetchFakeUsers()
+        .then((users) => {
+            importUsers(users)
+            saveUsers(users)
+            refreshEntries()
+        })
+        .catch((err) => {
+            console.error(err)
+            document.getElementById("errorMessage").innerText =
+                "Töötlemisel tekkis viga, vajuta SHIFT+CTRL+J, et näha rohkem"
+        })
+}
+
+function openNewUserForm() {
+    const formContainer = document.getElementById("addNewUserFormContainer")
+    formContainer.hidden = !formContainer.hidden
+
+}
+
+function addNewUserAction() {
+    const addUserErrorMessage = document.getElementById("addUserErrorMessage")
+    const usernameField = document.getElementById("addUsername")
+    const firstnameField = document.getElementById("addFirstname")
+    const surnameField = document.getElementById("addSurname")
+    const username = usernameField.value
+    const firstname = firstnameField.value
+    const surname = surnameField.value
+
+    let valid = true
+    let reason = ""
+    if (!username || username.trim() === "") {
+        valid = false;
+        reason = "Kasutajanimi"
+    } else if (!firstname || firstname.trim() === "") {
+        valid = false;
+        reason = "Eesnimi"
+    } else if (!surname || surname.trim() === "") {
+        valid = false;
+        reason = "Perenimi"
+    }
+
+    if (!valid) {
+        addUserErrorMessage.innerText = `${reason} ei kõlba`
+        return
+    }
+
+    addUserErrorMessage.innerText = ""
+    if (!addUser(username, firstname, surname)) {
+        addUserErrorMessage.innerText = "Kasutajanimi on juba olemas"
+        return
+    }
+
+    document.getElementById("addNewUserFormContainer").hidden = true
+}
+
 
 document.addEventListener("DOMContentLoaded", (event) => {
 
-    if (window.localStorage.getItem(STORAGE_ENTRY) == null)
-        fetchFakeUsers()
-            .then((users) => {
-                knownUsers = users
-                saveUsers(users)
-                refreshEntries()
-            })
-            .catch((err) => {
-                document.getElementById("errorMessage").innerText = toString(err)
-            })
+    if (!window.localStorage.getItem(STORAGE_ENTRY))
+        importPlaceholderUsers()
     else {
         knownUsers = JSON.parse(window.localStorage.getItem(STORAGE_ENTRY))
         refreshEntries()
     }
 
-
-
+    document.getElementById("reimportUsers").onclick = importPlaceholderUsers
+    document.getElementById("addNewUser").onclick = openNewUserForm
 })

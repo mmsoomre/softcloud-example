@@ -11,15 +11,25 @@
     <body>
         <h1>Proovitöö</h1>
         <span class="inline-buttons-right">
-            <button title="Võtab kasutajad typicode API-st uuesti">Tõmba kasutajad uuesti</button>
-            <button title="Lisa uus kasutaja">Lisa kasutaja</button>
+            <button id="reimportUsers" title="Võtab kasutajad typicode API-st uuesti">Tõmba kasutajad uuesti</button>
+            <button id="addNewUser" title="Lisa uus kasutaja">Lisa kasutaja</button>
         </span>
+        <div id="addNewUserFormContainer" hidden>
+            <div class="spacing-2"></div>
+            <form style="background-color: #00ff003b;" class="inline-form" id="addUserForm" action="javascript:addNewUserAction()">
+                <input id="addUsername" title="Kasutajanimi" type="text" name="username" value="" placeholder="Kasutajanimi">
+                <input id="addFirstname" title="Eesnimi" type="text" name="firstname" value="" placeholder="Eesnimi">
+                <input id="addSurname" title="Perenimi" type="text" name="surname" value="" placeholder="Perenimi">
+                <input type="submit" title="Lisa kasutaja ülaltoodud väärtustega" value="Lisa">
+            </form>
+            <h2 id="addUserErrorMessage"></h2>
+        </div>
         <div class="spacing-2"></div>
         <form class="inline-form" id="searchForm" action="javascript:searchUsersAction()">
             <input id="usernameSearch" title="Kasutajanimi" type="text" name="username" value="" placeholder="Kasutajanimi">
             <input id="firstnameSearch" title="Eesnimi" type="text" name="firstname" value="" placeholder="Eesnimi">
             <input id="surnameSearch" title="Perenimi" type="text" name="surname" value="" placeholder="Perenimi">
-            <input type="submit" title="Otsi" value="Otsi">
+            <input type="submit" title="Otsi kasutaja ülaltoodud filtrite järgi" value="Otsi">
         </form>
         <div class="spacing-1"></div>
         <span id="resultCountText" hidden>Leitud <b id="resultCount">?</b> tulemust</span>
@@ -31,7 +41,7 @@
                         <th class="table-element">Kasutajanimi</th>
                         <th class="table-element">Eesnimi</th>
                         <th class="table-element">Perenimi</th>
-                        <th class="table-element"></th>
+                        <th class="table-element" style="width:4rem;"></th>
                     </tr>
                 </thead>
                 <tbody id="usersTableBody">
